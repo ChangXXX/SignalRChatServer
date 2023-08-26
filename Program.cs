@@ -5,7 +5,6 @@ using SignalRChat.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddRazorPages();
 builder.Services.AddSignalR();
 builder.Services.Configure<ChatDatabaseSettings>(
     builder.Configuration.GetSection(ChatDatabaseSettings.sectionName)
@@ -29,13 +28,11 @@ else
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
 
 app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapRazorPages();
 app.MapHub<ChatHub>(ChatHub.path);
 app.MapControllers();
 
