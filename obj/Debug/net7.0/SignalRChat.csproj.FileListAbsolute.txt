@@ -44,3 +44,11 @@
 /Users/leechangmin/vscode/SignalRChat/obj/Debug/net7.0/SignalRChat.pdb
 /Users/leechangmin/vscode/SignalRChat/obj/Debug/net7.0/SignalRChat.genruntimeconfig.cache
 /Users/leechangmin/vscode/SignalRChat/obj/Debug/net7.0/ref/SignalRChat.dll
+/Users/leechangmin/vscode/SignalRChat/bin/Debug/net7.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+/Users/leechangmin/vscode/SignalRChat/bin/Debug/net7.0/Microsoft.IdentityModel.Abstractions.dll
+/Users/leechangmin/vscode/SignalRChat/bin/Debug/net7.0/Microsoft.IdentityModel.JsonWebTokens.dll
+/Users/leechangmin/vscode/SignalRChat/bin/Debug/net7.0/Microsoft.IdentityModel.Logging.dll
+/Users/leechangmin/vscode/SignalRChat/bin/Debug/net7.0/Microsoft.IdentityModel.Protocols.dll
+/Users/leechangmin/vscode/SignalRChat/bin/Debug/net7.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+/Users/leechangmin/vscode/SignalRChat/bin/Debug/net7.0/Microsoft.IdentityModel.Tokens.dll
+/Users/leechangmin/vscode/SignalRChat/bin/Debug/net7.0/System.IdentityModel.Tokens.Jwt.dll

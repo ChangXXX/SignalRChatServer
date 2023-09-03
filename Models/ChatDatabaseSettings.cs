@@ -4,7 +4,7 @@ namespace SignalRChat.Models;
 public class ChatDatabaseSettings
 {
 
-    public static string sectionName = "ChatDatabase";
+    public static string SectionName = "ChatDatabase";
 
     public string ConnectionString { get; set; } = null!;
 
