@@ -29,6 +29,9 @@ public class UsersService
     public async Task<User?> GetAsync(string id) =>
         await _usersCollection.Find(user => user.id == id).FirstOrDefaultAsync();
 
+    public async Task<User?> GetAsync(string name, string pwd) =>
+        await _usersCollection.Find(user => user.name == name && user.pwd == pwd).FirstOrDefaultAsync();
+
     public async Task UpdateAsync(string id, User updatedUser)
     {
         await _usersCollection.ReplaceOneAsync(user => user.id == id, updatedUser);
