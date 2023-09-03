@@ -2,6 +2,8 @@ using SignalRChat.Hubs;
 using SignalRChat.Models;
 using SignalRChat.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,21 +22,16 @@ builder.Services.AddAuthentication(options =>
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(options => 
 {
-    options.RequireHttpsMetadata = false;
-    options.Authority = "Authority URL";
-    options.Events = new JwtBearerEvents
+    options.TokenValidationParameters = new TokenValidationParameters
     {
-        OnMessageReceived = context =>
-        {
-            var accessToken = context.Request.Query["access_token"];
-            var path = context.HttpContext.Request.Path;
-            if (!string.IsNullOrEmpty(accessToken) && 
-                path.StartsWithSegments(ChatHub.path))
-            {
-                context.Token = accessToken;
-            }
-            return Task.CompletedTask;
-        }
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["Jwt.Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Issuer"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+
     };
 });
 
@@ -55,6 +52,7 @@ app.UseHttpsRedirection();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapHub<ChatHub>(ChatHub.path);
