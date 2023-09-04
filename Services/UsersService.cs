@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using SignalRChat.Models;
@@ -20,14 +21,15 @@ public class UsersService
         _usersCollection = mongoDb.GetCollection<User>(chatDatabaseSettings.Value.UsersCollectionName);
     }
 
-    public async Task CreateAsync(User newUser) =>
+    public async Task CreateAsync(User newUser) {
         await _usersCollection.InsertOneAsync(newUser);
+    }
 
     public async Task<List<User>> GetAsync() =>
         await _usersCollection.Find(_ => true).ToListAsync();
 
-    public async Task<User?> GetAsync(string id) =>
-        await _usersCollection.Find(user => user.id == id).FirstOrDefaultAsync();
+    public async Task<User?> GetAsync(string name) =>
+        await _usersCollection.Find(user => user.name == name).FirstOrDefaultAsync();
 
     public async Task<User?> GetAsync(string name, string pwd) =>
         await _usersCollection.Find(user => user.name == name && user.pwd == pwd).FirstOrDefaultAsync();

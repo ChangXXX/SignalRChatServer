@@ -54,7 +54,8 @@ public class UsersController : ControllerBase
             return BadRequest(new {message = "이름이나 비밀번호가 부정확합니다."});
         }
         var token = generateJwt(user);
-        return Ok(new { token = token });
+        Response.Headers.Add("Jwt", token);
+        return Ok();
     }
 
     [HttpGet]
@@ -62,11 +63,11 @@ public class UsersController : ControllerBase
     public async Task<List<User>> Get() =>
         await _usersService.GetAsync();
 
-    [HttpPut("{id}")]
+    [HttpPut("{name}")]
     [Authorize]
-    public async Task<IActionResult> Update(string id, User updatedUser)
+    public async Task<IActionResult> Update(string name, User updatedUser)
     {
-        var user = await _usersService.GetAsync(id);
+        var user = await _usersService.GetAsync(name);
 
         if (user == null)
         {
@@ -75,7 +76,7 @@ public class UsersController : ControllerBase
 
         updatedUser.id = user.id;
 
-        await _usersService.UpdateAsync(id, updatedUser);
+        await _usersService.UpdateAsync(name, updatedUser);
 
         return NoContent();
     }
