@@ -6,15 +6,13 @@ namespace SignalRChat.Models;
 
 public class User
 {
-    
-    // 키값
+    // id
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
-    public string? id { get; set; }
+    public string? Id { get; set; }
 
-    // id
-    public string name { get; set; } = null!;
+    public string Name { get; set; } = null!;
 
     // 비밀번호
-    public string pwd { get; set;} = null!;
+    public string Pwd { get; set;} = null!;
 }

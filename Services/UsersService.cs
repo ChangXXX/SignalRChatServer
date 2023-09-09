@@ -29,16 +29,8 @@ public class UsersService
         await _usersCollection.Find(_ => true).ToListAsync();
 
     public async Task<User?> GetAsync(string name) =>
-        await _usersCollection.Find(user => user.name == name).FirstOrDefaultAsync();
+        await _usersCollection.Find(user => user.Name == name).FirstOrDefaultAsync();
 
     public async Task<User?> GetAsync(string name, string pwd) =>
-        await _usersCollection.Find(user => user.name == name && user.pwd == pwd).FirstOrDefaultAsync();
-
-    public async Task UpdateAsync(string id, User updatedUser)
-    {
-        await _usersCollection.ReplaceOneAsync(user => user.id == id, updatedUser);
-    }
-
-    public async Task RemoveAsync(string id) =>
-        await _usersCollection.DeleteOneAsync(user => user.id == id);
+        await _usersCollection.Find(user => user.Name == name && user.Pwd == pwd).FirstOrDefaultAsync();
 }

@@ -27,20 +27,7 @@ public class UsersController : ControllerBase
     {
         await _usersService.CreateAsync(newUser);
 
-        return CreatedAtAction(nameof(Get), new { id = newUser.id });
-    }
-
-    [HttpGet("{id}")]
-    public async Task<ActionResult<User>> Get(string id)
-    {
-        var user = await _usersService.GetAsync(id);
-
-        if (user == null)
-        {
-            return NotFound();
-        }
-
-        return user;
+        return CreatedAtAction(nameof(Get), new { name = newUser.Name });
     }
 
     // 로그인 기능 담당하는 Get 함수
@@ -63,47 +50,13 @@ public class UsersController : ControllerBase
     public async Task<List<User>> Get() =>
         await _usersService.GetAsync();
 
-    [HttpPut("{name}")]
-    [Authorize]
-    public async Task<IActionResult> Update(string name, User updatedUser)
-    {
-        var user = await _usersService.GetAsync(name);
-
-        if (user == null)
-        {
-            return NotFound();
-        }
-
-        updatedUser.id = user.id;
-
-        await _usersService.UpdateAsync(name, updatedUser);
-
-        return NoContent();
-    }
-
-    [HttpDelete("{id}")]
-    [Authorize]
-    public async Task<IActionResult> Delete(string id)
-    {
-        var user = await _usersService.GetAsync(id);
-
-        if (user == null)
-        {
-            return NotFound();
-        }
-
-        await _usersService.RemoveAsync(id);
-        
-        return NoContent();
-    }
-
     private string generateJwt(User user)
     {
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
         var claims = new[] {
-            new Claim(JwtRegisteredClaimNames.Name, user.name),
+            new Claim(JwtRegisteredClaimNames.Name, user.Name),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 
