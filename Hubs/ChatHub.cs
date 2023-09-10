@@ -1,22 +1,36 @@
+using SignalRChat.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using System.Xml.Linq;
 
-namespace SignalRChat.Hubs
+namespace SignalRChat.Hubs;
+
+[Authorize]
+public class ChatHub : Hub
 {
-    [Authorize]
-    public class ChatHub : Hub
+    public static string path = "/chatHub";
+    private List<string> _users = new List<string>();
+
+    public override async Task OnConnectedAsync()
     {
-        public static string path = "/chatHub";
+        string name = Context.User.Claims.FirstOrDefault().Value;
+        _users.Add(name);
+        await Clients.All.SendAsync("ReceiveSystemMessage", $"{name} joined.");
+        await base.OnConnectedAsync();
+    }
 
-        public override async Task OnConnectedAsync()
+    public override Task OnDisconnectedAsync(Exception? exception)
+    {
+        string name = Context.User.Claims.FirstOrDefault().Value;
+        if (_users.Contains(name))
         {
-            await Clients.All.SendAsync("ReceiveSystemMessage", $"{Context.UserIdentifier} joined.");
-            await base.OnConnectedAsync();
+            _users.Remove(name);
         }
+        return base.OnDisconnectedAsync(exception);
+    }
 
-        public async Task SendMessage(string user, string message)
-        {
-            await Clients.All.SendAsync("ReceiveMessage", user, message);
-        }
+    public async Task SendMessageToAll(string user, string message)
+    {
+        await Clients.All.SendAsync("ReceiveAllMessage", user, message);
     }
 }
