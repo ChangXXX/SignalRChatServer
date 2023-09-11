@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using SignalRChat.Models;
 
@@ -25,8 +26,16 @@ public class UsersService
         await _usersCollection.InsertOneAsync(newUser);
     }
 
-    public async Task<List<User>> GetAsync() =>
-        await _usersCollection.Find(_ => true).ToListAsync();
+    public async Task<List<string>> GetAsync()
+    {
+        var users = await _usersCollection.Find(_ => true).ToListAsync();
+        var names = new List<string>();
+        for (int i = 0; i < users.Count; i++)
+        {
+            names.Add(users[i].Name);
+        }
+        return names;
+    }
 
     public async Task<User?> GetAsync(string name) =>
         await _usersCollection.Find(user => user.Name == name).FirstOrDefaultAsync();

@@ -47,7 +47,7 @@ public class UsersController : ControllerBase
 
     [HttpGet]
     [Authorize]
-    public async Task<List<User>> Get() =>
+    public async Task<List<string>> Get() =>
         await _usersService.GetAsync();
 
     private string generateJwt(User user)

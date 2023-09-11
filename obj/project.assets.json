@@ -1986,19 +1986,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\이기덕\\.nuget\\packages\\": {}
+    "C:\\Users\\eqqt9\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\이기덕\\Source\\Repos\\SignalRChatServer\\SignalRChat.csproj",
+      "projectUniqueName": "E:\\source\\repos\\SignalRChatServer\\SignalRChat.csproj",
       "projectName": "SignalRChat",
-      "projectPath": "C:\\Users\\이기덕\\Source\\Repos\\SignalRChatServer\\SignalRChat.csproj",
-      "packagesPath": "C:\\Users\\이기덕\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\이기덕\\Source\\Repos\\SignalRChatServer\\obj\\",
+      "projectPath": "E:\\source\\repos\\SignalRChatServer\\SignalRChat.csproj",
+      "packagesPath": "C:\\Users\\eqqt9\\.nuget\\packages\\",
+      "outputPath": "E:\\source\\repos\\SignalRChatServer\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\이기덕\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\eqqt9\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -2064,7 +2064,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
       }
     }
   }
