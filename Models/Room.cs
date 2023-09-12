@@ -15,6 +15,10 @@ public class Room
     }
     [Key]
     public long Id { get; set; }
-    [NotMapped]
-    public List<string> Users { get; set; } = new List<string>();
+    public List<string> Users { get; set; } = new();
+
+    public override bool Equals(object? obj)
+    {
+        return obj != null && Id == ((Room) obj).Id;
+    }
 }

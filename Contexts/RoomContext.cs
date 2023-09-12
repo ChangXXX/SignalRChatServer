@@ -12,5 +12,15 @@ public class RoomContext : DbContext
     {
     }
 
-    public DbSet<Room> Rooms { get; set; } = null!;   
+    public DbSet<Room> Rooms { get; set; } = null!;
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Room>()
+            .Property(x => x.Users)
+            .HasConversion(
+                v => string.Join(',', v),
+                v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList()
+            );
+    }
 }

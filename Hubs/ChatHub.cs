@@ -34,7 +34,7 @@ public class ChatHub : Hub
             var room = _rooms[i];
             if (room.Users.Contains(name))
             {
-                await Groups.AddToGroupAsync(Context.ConnectionId, name);
+                await Groups.AddToGroupAsync(Context.ConnectionId, room.Id.ToString());
                 await Clients.Group(room.Id.ToString()).SendAsync("SystemMessage", $"{name} 입장하셨습니다.");
                 break;
             }
@@ -96,5 +96,36 @@ public class ChatHub : Hub
     {
         string name = Context.User.Claims.FirstOrDefault().Value;
         await Clients.Group(room.Id.ToString()).SendAsync($"{name} : {message}");
+    }
+
+    public async Task EnterManyUserRoom()
+    {
+        string name = Context.User.Claims.FirstOrDefault().Value;
+        var _rooms = _roomContext.Rooms
+            .Select(x => new Room(x.Id, x.Users))
+            .ToList();
+
+        if (_rooms.Count > 0)
+        {
+            Room room = _rooms[0];
+            for (int i = 1; i < _rooms.Count; i++)
+            {
+                if (room.Users.Count < _rooms[i].Users.Count)
+                {
+                    room = _rooms[i];
+                }
+            }
+            _roomContext.Rooms.Update(room);
+            await _roomContext.SaveChangesAsync();
+            var userNames = String.Join(", ", room.Users);
+
+            await Groups.AddToGroupAsync(Context.ConnectionId, room.Id.ToString());
+            await Clients.Group(room.Id.ToString()).SendAsync("SystemMessage", $"{name}님이 입장하셨습니다.");
+            await Clients.Group(room.Id.ToString()).SendAsync("SystemMessage", $"현재 구성원 목록 ::: {userNames}");
+        }
+        else
+        {
+            await Clients.User(Context.User.Identity.Name).SendAsync("SystemMessage", "채팅방이 존재하지 않습니다");
+        }
     }
 }
