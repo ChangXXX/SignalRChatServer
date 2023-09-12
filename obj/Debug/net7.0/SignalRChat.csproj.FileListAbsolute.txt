@@ -106,3 +106,6 @@ E:\source\repos\SignalRChatServer\obj\Debug\net7.0\refint\SignalRChat.dll
 E:\source\repos\SignalRChatServer\obj\Debug\net7.0\SignalRChat.pdb
 E:\source\repos\SignalRChatServer\obj\Debug\net7.0\SignalRChat.genruntimeconfig.cache
 E:\source\repos\SignalRChatServer\obj\Debug\net7.0\ref\SignalRChat.dll
+E:\source\repos\SignalRChatServer\bin\Debug\net7.0\Microsoft.EntityFrameworkCore.dll
+E:\source\repos\SignalRChatServer\bin\Debug\net7.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+E:\source\repos\SignalRChatServer\bin\Debug\net7.0\Microsoft.EntityFrameworkCore.InMemory.dll

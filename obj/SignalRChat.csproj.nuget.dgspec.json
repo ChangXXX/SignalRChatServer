@@ -48,6 +48,10 @@
               "target": "Package",
               "version": "[7.0.10, )"
             },
+            "Microsoft.EntityFrameworkCore.InMemory": {
+              "target": "Package",
+              "version": "[7.0.10, )"
+            },
             "MongoDB.Driver": {
               "target": "Package",
               "version": "[2.21.0, )"

@@ -4,6 +4,8 @@ using SignalRChat.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using SignalRChat.Contexts;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +16,9 @@ builder.Services.Configure<ChatDatabaseSettings>(
 );
 builder.Services.AddControllers();
 builder.Services.AddSingleton<UsersService>();
+builder.Services.AddDbContext<RoomContext>(opt =>
+    opt.UseInMemoryDatabase("Rooms")
+);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAuthentication(options =>
