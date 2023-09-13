@@ -1,10 +1,7 @@
 using SignalRChat.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
-using System.Xml.Linq;
-using MongoDB.Bson;
 using SignalRChat.Contexts;
-using Microsoft.EntityFrameworkCore;
 
 namespace SignalRChat.Hubs;
 
@@ -122,6 +119,22 @@ public class ChatHub : Hub
             await Groups.AddToGroupAsync(Context.ConnectionId, room.Id.ToString());
             await Clients.Group(room.Id.ToString()).SendAsync("SystemMessage", $"{name}님이 입장하셨습니다.");
             await Clients.Group(room.Id.ToString()).SendAsync("SystemMessage", $"현재 구성원 목록 ::: {userNames}");
+        }
+        else
+        {
+            await Clients.User(Context.User.Identity.Name).SendAsync("SystemMessage", "채팅방이 존재하지 않습니다");
+        }
+    }
+
+    public async Task PrintRooms()
+    {
+        var _rooms = _roomContext.Rooms
+            .Select(x => new Room(x.Id, x.Users))
+            .ToList();
+
+        if (_rooms.Count > 0)
+        {
+            await Clients.User(Context.User.Identity.Name).SendAsync("PrintRooms", _rooms);
         }
         else
         {
