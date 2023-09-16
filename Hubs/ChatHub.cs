@@ -43,14 +43,8 @@ public class ChatHub : Hub
         }
         else
         {
-            await Clients.Client(Context.ConnectionId).SendAsync("SystemMessage", "방 생성에 실패하였습니다");
+            await Clients.Client(Context.User.Identity.Name).SendAsync("SystemMessage", "방 생성에 실패하였습니다");
         }
-    }
-
-    public async Task SendMessage(Room room, string message)
-    {
-        string name = Context.User.Claims.FirstOrDefault().Value;
-        await Clients.Group(room.Id.ToString()).SendAsync($"{name} : {message}");
     }
 
     public async Task EnterManyUserRoom()
@@ -63,6 +57,7 @@ public class ChatHub : Hub
         if (_rooms.Count > 0)
         {
             Room room = _rooms[0];
+            // 가장 유저가 많은 room search
             for (int i = 1; i < _rooms.Count; i++)
             {
                 if (room.Users.Count < _rooms[i].Users.Count)
@@ -70,13 +65,13 @@ public class ChatHub : Hub
                     room = _rooms[i];
                 }
             }
-            _roomContext.Rooms.Update(room);
-            await _roomContext.SaveChangesAsync();
-            var userNames = String.Join(", ", room.Users);
-
-            await Groups.AddToGroupAsync(Context.ConnectionId, room.Id.ToString());
-            await Clients.Group(room.Id.ToString()).SendAsync("SystemMessage", $"{name}님이 입장하셨습니다.");
-            await Clients.Group(room.Id.ToString()).SendAsync("SystemMessage", $"현재 구성원 목록 ::: {userNames}");
+            if (!room.Users.Contains(name))
+            {
+                room.Users.Add(name);
+                _roomContext.Rooms.Update(room);
+                await _roomContext.SaveChangesAsync();
+            }
+            await Clients.User(Context.User.Identity.Name).SendAsync("EnterManyUserRoom", room);
         }
         else
         {
@@ -126,4 +121,8 @@ public class ChatHub : Hub
         await Groups.RemoveFromGroupAsync(Context.ConnectionId, room.Id.ToString());
     }
 
+    public async Task SendGroupMessage(string roomId, Message msg)
+    {
+        await Clients.Group(roomId).SendAsync("SendGroupMessage", msg);
+    }
 }
