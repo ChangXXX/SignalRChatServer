@@ -2,6 +2,7 @@ using SignalRChat.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using SignalRChat.Contexts;
+using Microsoft.EntityFrameworkCore;
 
 namespace SignalRChat.Hubs;
 
@@ -16,49 +17,6 @@ public class ChatHub : Hub
     public ChatHub(RoomContext roomContext)
     {
         _roomContext = roomContext;
-    }
-
-
-    public override async Task OnConnectedAsync()
-    {
-        string name = Context.User.Claims.FirstOrDefault().Value;
-        // 유저를 찾아서 해당 방에 입장시킴.
-        var _rooms = _roomContext.Rooms
-            .Select(x => new Room(x.Id, x.Users))
-            .ToList();
-        for (int i = 0; i < _rooms.Count; i++)
-        {
-            var room = _rooms[i];
-            if (room.Users.Contains(name))
-            {
-                await Groups.AddToGroupAsync(Context.ConnectionId, room.Id.ToString());
-                await Clients.Group(room.Id.ToString()).SendAsync("SystemMessage", $"{name} 입장하셨습니다.");
-                break;
-            }
-        }
-
-        await base.OnConnectedAsync();
-    }
-
-    public override Task OnDisconnectedAsync(Exception? exception)
-    {
-        string name = Context.User.Claims.FirstOrDefault().Value;
-        // 유저를 찾아서 해당 방에서 연결을 끊음.
-        var _rooms = _roomContext.Rooms
-            .Select(x => new Room(x.Id, x.Users))
-            .ToList();
-
-        for (int i = 0; i < _rooms.Count; i++)
-        {
-            var room = _rooms[i];
-            if (room.Users.Contains(name))
-            {
-                Groups.RemoveFromGroupAsync(Context.ConnectionId, name);
-                Clients.Group(room.Id.ToString()).SendAsync("SystemMessage", $"{name} 퇴장하셨습니다.").GetAwaiter().GetResult();
-                break;
-            }
-        }
-        return base.OnDisconnectedAsync(exception);
     }
 
     public async Task SendMessageToAll(string user, string message)
@@ -141,4 +99,31 @@ public class ChatHub : Hub
             await Clients.User(Context.User.Identity.Name).SendAsync("SystemMessage", "채팅방이 존재하지 않습니다");
         }
     }
+
+    public async Task ConnectChatRoom(Room room)
+    {
+        var _room = await _roomContext.Rooms
+            .Select(x => new Room(x.Id, x.Users))
+            .Where(y => y.Id == room.Id)
+            .FirstAsync();
+
+        if (room != null)
+        {
+            string name = Context.User.Claims.FirstOrDefault().Value;
+            if (!room.Users.Contains(name))
+            {
+                // 유저를 찾아서 해당 방에 입장시킴.
+                _room.Users.Add(name);
+                _roomContext.Rooms.Update(_room);
+                await _roomContext.SaveChangesAsync();
+            }
+            await Groups.AddToGroupAsync(Context.ConnectionId, room.Id.ToString());
+        }
+    }
+
+    public async Task DisconnectConnectChatRoom(Room room)
+    {
+        await Groups.RemoveFromGroupAsync(Context.ConnectionId, room.Id.ToString());
+    }
+
 }
